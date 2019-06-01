@@ -58,4 +58,20 @@ module.exports = function (Product) {
     }
     callback(null, result)
   }
+
+  Product.observe('before save', function (context, next) {
+    const { instance } = context
+    if (instance && instance.categoryId) {
+      return Product.app.models.Category
+        .count({
+          id: instance.categoryId
+        })
+        .then(response => {
+          if (response < 1) {
+            return Promise.reject('error adding a product to a non-existant category')
+          }
+        })
+    }
+    next()
+  })
 }

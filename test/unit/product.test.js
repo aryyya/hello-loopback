@@ -63,3 +63,20 @@ describe('validation', () => {
       })
   })
 })
+
+describe('hooks', () => {
+
+  it('should not allow adding a product to a non-existant category', () => {
+    return Product.create({
+      name: 'Apple',
+      price: 99,
+      categoryId: 99
+    })
+      .then(response => {
+        throw new Error('product should not be created')
+      })
+      .catch(error => {
+        expect(error).to.contain('error adding a product to a non-existant category')
+      })
+  })
+})
