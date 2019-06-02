@@ -71,5 +71,21 @@ describe('acl', () => {
         .delete('/api/products/1')
         .expect(httpStatus.UNAUTHORIZED)
     })
+
+    it('should return a 200 OK when buying a product', () => {
+      return app.models.Product
+        .create({
+          name: 'Test Product',
+          price: 99
+        })
+        .then(product => {
+          return request
+            .post(`/api/products/${product.id}/buy`)
+            .send({
+              quantity: 10
+            })
+            .expect(httpStatus.OK)
+        })
+    })
   })
 })
